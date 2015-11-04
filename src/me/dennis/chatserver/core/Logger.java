@@ -1,14 +1,20 @@
 package me.dennis.chatserver.core;
 
+import static java.util.Calendar.HOUR;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
+
 import java.util.Calendar;
-import static java.util.Calendar.*;
 
 public class Logger {
 
-	private static Calendar cal = Calendar.getInstance();
+	private static Calendar cal;
 	
 	private static String getDate() {
-		return "[" + (cal.get(HOUR)) + ":" + (cal.get(MINUTE) + ":" + (cal.get(SECOND) + "]"));
+		cal = Calendar.getInstance();
+		return "[" + String.format("%02d",cal.get(HOUR)) + ":"
+				+ String.format("%02d",cal.get(MINUTE)) + ":"
+				+ String.format("%02d",cal.get(SECOND)) + "]";
 	}
 	
 	public static void info(String s) {
@@ -16,7 +22,7 @@ public class Logger {
 	}
 	
 	public static void err(String s) {
-		System.out.println(getDate() + "[SEVERE] " + s);
+		System.err.println(getDate() + "[SEVERE] " + s);
 	}
 	
 }
