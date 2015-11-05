@@ -46,8 +46,8 @@ public class Server {
 	public static void broadcast(String str) {
 		for (SocketThread thread : Server.threads) {
 			thread.sendMessage(str);
-			Logger.info(str);
 		}
+		Logger.info(str);
 	}
 	
 }
