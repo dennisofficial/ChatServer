@@ -29,7 +29,6 @@ public class Server {
 		}
 		Logger.info("Server Started!");
 		while (true) {
-			Logger.info("Waiting for connection...");
 			try {
 				Socket connection = server.accept();
 				Logger.info("Connection made with: " + connection.getInetAddress().getHostAddress());
