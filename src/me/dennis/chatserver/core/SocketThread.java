@@ -31,8 +31,22 @@ public class SocketThread implements Runnable {
 			while (true) {
 				String input = this.input.readUTF();
 				if (input != null && nickname == null) {
-					nickname = input;
-					Server.broadcast(connection.getInetAddress().getHostAddress() + " is now known as " + nickname + "!");
+					boolean found = false;
+					for (SocketThread st : Server.threads) {
+						try {
+							if (st.nickname.equalsIgnoreCase(input)) {
+								found = true;
+							}
+						}
+						catch (NullPointerException ex) {}
+					}
+					if (found) {
+						sendMessage("msg\tserver\t\tdeny");
+					}
+					else {
+						nickname = input;
+						Server.broadcast(connection.getInetAddress().getHostAddress() + " is now known as " + nickname + "!");
+					}
 				}
 				else {
 					Server.broadcast(nickname + ": " + input);
