@@ -41,15 +41,16 @@ public class SocketThread implements Runnable {
 						catch (NullPointerException ex) {}
 					}
 					if (found) {
-						sendMessage("msg\tserver\t\tdeny");
+						sendMessage("msg\tserver\tusername");
 					}
 					else {
 						nickname = input;
 						Server.broadcast(connection.getInetAddress().getHostAddress() + " is now known as " + nickname + "!");
+						sendMessage("msg\tserver\taccept");
 					}
 				}
 				else {
-					Server.broadcast(nickname + ": " + input);
+					Server.broadcast("msg\t" + nickname + "\t" + input);
 				}
 			}
 		}
