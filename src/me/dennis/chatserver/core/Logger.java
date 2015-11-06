@@ -8,9 +8,9 @@ import java.util.Calendar;
 
 public class Logger {
 
-	private static Calendar cal;
+	private Calendar cal;
 	
-	private static String getDate() {
+	private String getDate() {
 		cal = Calendar.getInstance();
 		return "[" + String.format("%02d",cal.get(HOUR)) + ":"
 				+ String.format("%02d",cal.get(MINUTE)) + ":"
@@ -18,11 +18,15 @@ public class Logger {
 	}
 	
 	public static void info(String s) {
-		System.out.println(getDate() + "[INFO] " + s);
+		Logger log = new Logger();
+		System.out.println(log.getDate() + "[INFO] " + s);
+		log = null;
 	}
 	
 	public static void err(String s) {
-		System.err.println(getDate() + "[SEVERE] " + s);
+		Logger log = new Logger();
+		System.err.println(log.getDate() + "[SEVERE] " + s);
+		log = null;
 	}
 	
 }
