@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.dennis.chatserver.protocols.MessageProtocol;
+
 public class Server {
 
 	public ServerSocket server;
@@ -46,7 +48,8 @@ public class Server {
 		for (SocketThread thread : Server.threads) {
 			thread.sendMessage(str);
 		}
-		Logger.info(str);
+		MessageProtocol.parsePacket(str);
+		Logger.info(MessageProtocol.getFrom() + ": " + MessageProtocol.getMessage());
 	}
 	
 }
