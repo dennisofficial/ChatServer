@@ -1,4 +1,4 @@
-package me.dennis.chatserver.core;
+package me.dennis.chatserver.types;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 
+import me.dennis.chatserver.core.Server;
 import me.dennis.chatserver.protocols.MessageProtocol;
+import me.dennis.chatserver.utils.Logger;
 
 public class SocketThread implements Runnable {
 

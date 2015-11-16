@@ -1,4 +1,4 @@
-package me.dennis.chatserver.core;
+package me.dennis.chatserver.types;
 
 import me.dennis.chatserver.protocols.MessageProtocol;
 

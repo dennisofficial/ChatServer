@@ -1,6 +1,6 @@
 package me.dennis.chatserver.protocols;
 
-import me.dennis.chatserver.core.Protocol;
+import me.dennis.chatserver.types.Protocol;
 
 public class MessageProtocol extends Protocol {
 

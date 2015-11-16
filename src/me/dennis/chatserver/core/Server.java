@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.dennis.chatserver.protocols.MessageProtocol;
+import me.dennis.chatserver.types.SocketThread;
+import me.dennis.chatserver.utils.Logger;
 
 public class Server {
 

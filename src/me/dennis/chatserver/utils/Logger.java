@@ -1,4 +1,4 @@
-package me.dennis.chatserver.core;
+package me.dennis.chatserver.utils;
 
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
