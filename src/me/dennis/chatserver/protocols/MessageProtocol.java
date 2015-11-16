@@ -9,13 +9,13 @@ public class MessageProtocol extends Protocol {
 	
 	@Override
 	public void runData(String data) {
-		String[] vals = data.split("\t");
+		String[] vals = data.split("\t", 2);
 		from = vals[0];
 		message = vals[1];
 	}
 	
 	public static boolean recievedData() {
-		if (message != null) {
+		if (from != null) {
 			return true;
 		}
 		return false;
