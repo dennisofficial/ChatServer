@@ -55,6 +55,9 @@ public class Server {
 		pm.parsePacket(str);
 		MessageProtocol mp = pm.getMessageProtocol();
 		Logger.info(mp.getFrom() + ": " + mp.getMessage());
+		mp = null;
+		pm = null;
+		System.gc();
 	}
 	
 }

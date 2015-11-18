@@ -9,10 +9,6 @@ public class ActionProtocol extends Protocol {
 	private static Action action;
 	private static String data;
 	
-	public ActionProtocol() {
-		System.out.println("TEST");
-	}
-	
 	@Override
 	public void runData(String data) {
 		String[] vals = data.split("\t", 3);
