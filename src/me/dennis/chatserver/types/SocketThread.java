@@ -5,11 +5,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 
 import me.dennis.chatserver.core.Server;
+import me.dennis.chatserver.protocols.ActionProtocol;
 import me.dennis.chatserver.protocols.MessageProtocol;
-import me.dennis.chatserver.utils.Logger;
 
 public class SocketThread implements Runnable {
 
@@ -34,48 +33,46 @@ public class SocketThread implements Runnable {
 	public void run() {
 		try {
 			while (true) {
-				String input = this.input.readUTF().trim();
-				if (input != null && nickname == null) {
-					boolean found = false;
-					for (SocketThread st : Server.threads) {
-						try {
-							if (st.nickname.equalsIgnoreCase(input)) {
-								found = true;
+				// TURN PROCCOLS INTO OBJECT FOR EACH SOCKET THREAD
+				Protocol.parsePacket(input.readUTF());
+				if (MessageProtocol.receivedData() && joined) {
+					Server.broadcast(MessageProtocol.generate(MessageProtocol.getFrom(), MessageProtocol.getMessage()));
+				}
+				if (ActionProtocol.receivedData()) {
+					if (ActionProtocol.getAction().equals(Action.USERNAME_VERIFY)) {
+						String verify = ActionProtocol.getData();
+						boolean accepted = true;
+						for (SocketThread thread : Server.threads) {
+							if (thread.joined) {
+								if (verify.equalsIgnoreCase(thread.nickname)) {
+									accepted = false;
+								}
 							}
 						}
-						catch (NullPointerException ex) {}
+						if (accepted) {
+							sendMessage(ActionProtocol.generateString(Action.USERNAME_ACCEPT, null));
+							nickname = verify;
+						}
+						else {
+							sendMessage(ActionProtocol.generateString(Action.USERNAME_DENY, null));
+						}
 					}
-					if (found) {
-						sendMessage(MessageProtocol.generate("Server", "username"));
-					}
-					else {
-						nickname = input;
-						Server.broadcast(MessageProtocol.generate("Server", nickname + " joined the chat!"));
-						sendMessage(MessageProtocol.generate("Server", "accept"));
+					if (ActionProtocol.getAction().equals(Action.JOINED)) {
+						System.out.println("TEST");
+						joined = true;
+						Server.broadcast(MessageProtocol.generate(nickname + " joined the chat!"));
+						sendMessage(MessageProtocol.generate("Welcome to the chat " + nickname + "!"));
+						String list = "";
+						for (SocketThread thread : Server.threads) {
+							list += ", " + thread.nickname;
+						}
+						sendMessage(MessageProtocol.generate("Users online: " + list.replaceFirst(", ", "")));
 					}
 				}
-				else if (input.equals("joined")) {
-					joined = true;
-					sendMessage(MessageProtocol.generate("Server", "Welcome to the chat " + nickname + "!"));
-					String list = "";
-					for (SocketThread thread : Server.threads) {
-						list += ", " + thread.nickname;
-					}
-					sendMessage(MessageProtocol.generate("Server", "Users online: " + list.replaceFirst(", ", "")));
-				}
-				else {
-					Server.broadcast(MessageProtocol.generate(nickname, input));
-				}
-			}
-		}
-		catch (SocketException ex) {
-			Logger.info("Connection disconnected with: " + connection.getInetAddress().getHostAddress());
-			Server.threads.remove(this);
-			Server.broadcast(MessageProtocol.generate("Server", nickname + " left the chat!"));
-			return;
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
+			}	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

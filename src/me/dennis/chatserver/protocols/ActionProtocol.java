@@ -14,11 +14,11 @@ public class ActionProtocol extends Protocol {
 		String[] vals = data.split("\t", 3);
 		from = vals[0];
 		action = Action.parseString(vals[1]);
-		data = vals[2];
+		ActionProtocol.data = vals[2];
 	}
 	
 	public static boolean receivedData() {
-		if (from != null) {
+		if (action != null) {
 			return true;
 		}
 		return false;
@@ -35,9 +35,15 @@ public class ActionProtocol extends Protocol {
 	public static String getData() {
 		return data;
 	}
-	
-	public static String generateString(String from, Action action, String data) {
-		return from + "\t" + action.name() + "\t" + data;
-	}
 
+	public static void reset() {
+		from = null;
+		action = null;
+		data = null;
+	}
+	
+	public static String generateString(Action action, String data) {
+		return "action\tServer\t" + action.name() + "\t" + data;
+	}
+	
 }

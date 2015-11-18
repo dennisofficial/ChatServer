@@ -33,6 +33,10 @@ public class MessageProtocol extends Protocol {
 		message = null;
 	}
 	
+	public static String generate(String msg) {
+		return "msg\tServer\t" + msg;
+	}
+	
 	public static String generate(String from, String msg) {
 		return "msg\t" + from + "\t" + msg;
 	}

@@ -1,9 +1,10 @@
 package me.dennis.chatserver.types;
 
+import me.dennis.chatserver.protocols.ActionProtocol;
 import me.dennis.chatserver.protocols.MessageProtocol;
 
 public abstract class Protocol {
-
+	
 	public abstract void runData(String data);
 	
 	public static void parsePacket(String msg) {
@@ -21,7 +22,8 @@ public abstract class Protocol {
 	
 	enum Enum {
 		
-		MESSAGE("msg", new MessageProtocol());
+		MESSAGE("msg", new MessageProtocol()),
+		ACTION("action", new ActionProtocol());
 		
 		public String label;
 		public Protocol protocol;
