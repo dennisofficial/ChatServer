@@ -14,21 +14,21 @@ public class MessageProtocol extends Protocol {
 		message = vals[1];
 	}
 	
-	public static boolean receivedData() {
+	public boolean receivedData() {
 		if (from != null) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static String getFrom() {
+	public String getFrom() {
 		return from;
 	}
-	public static String getMessage() {
+	public String getMessage() {
 		return message;
 	}
 
-	public static void reset() {
+	public void reset() {
 		from = null;
 		message = null;
 	}

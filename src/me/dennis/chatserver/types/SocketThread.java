@@ -5,10 +5,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 import me.dennis.chatserver.core.Server;
 import me.dennis.chatserver.protocols.ActionProtocol;
 import me.dennis.chatserver.protocols.MessageProtocol;
+import me.dennis.chatserver.utils.ProtocolManager;
 
 public class SocketThread implements Runnable {
 
@@ -32,15 +34,18 @@ public class SocketThread implements Runnable {
 	@Override
 	public void run() {
 		try {
+			ProtocolManager pm = new ProtocolManager();
+			MessageProtocol mp = pm.getMessageProtocol();
+			ActionProtocol ap = pm.getActionProtocol();
 			while (true) {
 				// TURN PROCCOLS INTO OBJECT FOR EACH SOCKET THREAD
-				Protocol.parsePacket(input.readUTF());
-				if (MessageProtocol.receivedData() && joined) {
-					Server.broadcast(MessageProtocol.generate(MessageProtocol.getFrom(), MessageProtocol.getMessage()));
+				pm.parsePacket(input.readUTF());
+				if (mp.receivedData() && joined) {
+					Server.broadcast(MessageProtocol.generate(mp.getFrom(), mp.getMessage()));
 				}
-				if (ActionProtocol.receivedData()) {
-					if (ActionProtocol.getAction().equals(Action.USERNAME_VERIFY)) {
-						String verify = ActionProtocol.getData();
+				if (ap.receivedData()) {
+					if (ap.getAction().equals(Action.USERNAME_VERIFY)) {
+						String verify = ap.getData();
 						boolean accepted = true;
 						for (SocketThread thread : Server.threads) {
 							if (thread.joined) {
@@ -57,9 +62,9 @@ public class SocketThread implements Runnable {
 							sendMessage(ActionProtocol.generateString(Action.USERNAME_DENY, null));
 						}
 					}
-					if (ActionProtocol.getAction().equals(Action.JOINED)) {
-						System.out.println("TEST");
+					if (ap.getAction().equals(Action.JOINED)) {
 						joined = true;
+						sendMessage(ActionProtocol.generateString(Action.JOINED, null));
 						Server.broadcast(MessageProtocol.generate(nickname + " joined the chat!"));
 						sendMessage(MessageProtocol.generate("Welcome to the chat " + nickname + "!"));
 						String list = "";
@@ -69,9 +74,13 @@ public class SocketThread implements Runnable {
 						sendMessage(MessageProtocol.generate("Users online: " + list.replaceFirst(", ", "")));
 					}
 				}
+				mp.reset();
+				ap.reset();
 			}	
+		} catch (SocketException ex) {
+			Server.threads.remove(this);
+			Server.broadcast(MessageProtocol.generate(nickname + " has left the chat!"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

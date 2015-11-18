@@ -9,6 +9,10 @@ public class ActionProtocol extends Protocol {
 	private static Action action;
 	private static String data;
 	
+	public ActionProtocol() {
+		System.out.println("TEST");
+	}
+	
 	@Override
 	public void runData(String data) {
 		String[] vals = data.split("\t", 3);
@@ -17,26 +21,26 @@ public class ActionProtocol extends Protocol {
 		ActionProtocol.data = vals[2];
 	}
 	
-	public static boolean receivedData() {
+	public boolean receivedData() {
 		if (action != null) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static String getFrom() {
+	public String getFrom() {
 		return from;
 	}
 	
-	public static Action getAction() {
+	public Action getAction() {
 		return action;
 	}
 	
-	public static String getData() {
+	public String getData() {
 		return data;
 	}
 
-	public static void reset() {
+	public void reset() {
 		from = null;
 		action = null;
 		data = null;

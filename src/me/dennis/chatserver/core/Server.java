@@ -10,6 +10,7 @@ import java.util.List;
 import me.dennis.chatserver.protocols.MessageProtocol;
 import me.dennis.chatserver.types.SocketThread;
 import me.dennis.chatserver.utils.Logger;
+import me.dennis.chatserver.utils.ProtocolManager;
 
 public class Server {
 
@@ -50,8 +51,10 @@ public class Server {
 		for (SocketThread thread : Server.threads) {
 			thread.sendMessage(str);
 		}
-		MessageProtocol.parsePacket(str);
-		Logger.info(MessageProtocol.getFrom() + ": " + MessageProtocol.getMessage());
+		ProtocolManager pm = new ProtocolManager();
+		pm.parsePacket(str);
+		MessageProtocol mp = pm.getMessageProtocol();
+		Logger.info(mp.getFrom() + ": " + mp.getMessage());
 	}
 	
 }
