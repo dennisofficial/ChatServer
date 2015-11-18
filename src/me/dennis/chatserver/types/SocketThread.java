@@ -38,7 +38,6 @@ public class SocketThread implements Runnable {
 			MessageProtocol mp = pm.getMessageProtocol();
 			ActionProtocol ap = pm.getActionProtocol();
 			while (true) {
-				// TURN PROCCOLS INTO OBJECT FOR EACH SOCKET THREAD
 				pm.parsePacket(input.readUTF());
 				if (mp.receivedData() && joined) {
 					Server.broadcast(MessageProtocol.generate(mp.getFrom(), mp.getMessage()));
